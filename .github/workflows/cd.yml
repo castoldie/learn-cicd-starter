@@ -23,8 +23,8 @@ jobs:
 
       - name: Log in gcloud
         run: |
-          echo "${{ secrets.GCP_CREDENTIALS }}" >> notely-412313-effa4744432f.json
-          gcloud auth activate-service-account --key-file=notely-412313-effa4744432f.json
+          echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > cred.json
+          gcloud auth activate-service-account --key-file=cred.json
           rm cred.json
 
       - name: Build & push to GCR
