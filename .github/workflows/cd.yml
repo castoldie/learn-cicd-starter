@@ -21,21 +21,6 @@ jobs:
       - name: Build notely
         run: ./scripts/buildprod.sh
 
-      - name: Set up env vars
-        run: |
-          echo "${{ secrets.ENV }}" > .env
-          set -a
-          source .env
-          set +a
-          echo "REGION: $REGION"
-
       - name: Build & push to GCR
-        env:
-          REGION: ${{ ENV.REGION }}
-          PROJECT_ID: ${{ ENV.PROJECT_ID }}
-          REPOSITORY: ${{ ENV.REPOSITORY }}
-          IMAGE: ${{ ENV.IMAGE }}
-          TAG: ${{ ENV.TAG }}
         run: |
-          echo "REGION: $REGION"
-          gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG .
+          gcloud builds submit --tag ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.IMAGE }}:${{ secrets.TAG }} --project=${{ secrets.PROJECT_ID }} .
