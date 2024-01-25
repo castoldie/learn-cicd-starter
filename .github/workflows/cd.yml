@@ -23,7 +23,7 @@ jobs:
 
       - name: Log in gcloud
         run: |
-          echo ${{ secrets.GCP_CREDENTIALS }} >> cred.json
+          echo "${{ secrets.GCP_CREDENTIALS }}" >> cred.json
           gcloud auth activate-service-account --key-file=cred.json
           rm cred.json
 
