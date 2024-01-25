@@ -22,7 +22,10 @@ jobs:
         run: ./scripts/buildprod.sh
 
       - name: Log in gcloud
-        run: gcloud auth activate-service-account --key-file=${{ secrets.GCP_CREDENTIALS }}
+        run: |
+          touch cred.json && echo ${{ secrets.GCP_CREDENTIALS }} >> cred.json
+          gcloud auth activate-service-account --key-file=cred.json
+          rm cred.json
 
       - name: Build & push to GCR
         run: |
