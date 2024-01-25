@@ -23,4 +23,4 @@ jobs:
 
       - name: Build & push to GCR
         run: |
-          gcloud builds submit --tag ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.IMAGE }}:${{ secrets.TAG }} --project=${{ secrets.PROJECT_ID }} .
+          gcloud builds submit --tag ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.REPOSITORY }}/${{ vars.IMAGE }}:${{ vars.TAG }} --project=${{ vars.PROJECT_ID }} .
