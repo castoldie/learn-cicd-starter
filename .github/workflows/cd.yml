@@ -24,18 +24,11 @@ jobs:
       - name: Set up env vars
         run: |
           echo "${{ secrets.ENV }}" > .env
-          set -a
-          source .env
-          set +a
-          echo "REGION: $REGION"
+          while IFS='=' read -r key value; do
+            echo "$key=$value" >> $GITHUB_ENV
+          done < .env
 
       - name: Build & push to GCR
-        env:
-          REGION: ${{ env.REGION }}
-          PROJECT_ID: ${{ env.PROJECT_ID }}
-          REPOSITORY: ${{ env.REPOSITORY }}
-          IMAGE: ${{ env.IMAGE }}
-          TAG: ${{ env.TAG }}
         run: |
-          echo "REGION: $REGION"
           gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG .
+
