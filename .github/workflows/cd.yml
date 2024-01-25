@@ -21,6 +21,9 @@ jobs:
       - name: Build notely
         run: ./scripts/buildprod.sh
 
+      - name: Log in gcloud
+        run: gcloud auth activate-service-account --key-file=${{ secrets.GCP_CREDENTIALS }}
+
       - name: Build & push to GCR
         run: |
           gcloud builds submit --tag ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.REPOSITORY }}/${{ vars.IMAGE }}:${{ vars.TAG }} --project=${{ vars.PROJECT_ID }} .
