@@ -21,14 +21,6 @@ jobs:
       - name: Build notely
         run: ./scripts/buildprod.sh
 
-      - name: Set up env vars
-        run: |
-          echo "${{ secrets.ENV }}" > .env
-          while IFS='=' read -r key value; do
-            echo "$key=$value" >> $GITHUB_ENV
-          done < .env
-
       - name: Build & push to GCR
         run: |
-          gcloud builds submit --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG .
-
+          gcloud builds submit --tag ${{ secrets.REGION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.IMAGE }}:${{ secrets.TAG }} --project=${{ secrets.PROJECT_ID }} .
