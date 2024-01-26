@@ -9,6 +9,9 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -30,6 +33,11 @@ jobs:
       - name: Build & push to GCR
         run: |
           gcloud builds submit --tag ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.REPOSITORY }}/${{ vars.IMAGE }}:${{ vars.TAG }} --project=${{ vars.PROJECT_ID }} .
+
+      - name: DB Migration
+        run: |
+          go install github.com/pressly/goose/v3/cmd/goose@latest
+          ./scripts/migrateup.sh
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy notely --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.REPOSITORY }}/${{ vars.IMAGE }}:${{ vars.TAG }} --region ${{ vars.REGION }} --allow-unauthenticated --project ${{ vars.PROJECT_ID }} --max-instances=4
