@@ -32,3 +32,6 @@ jobs:
       - name: Build & push to GCR
         run: |
           gcloud builds submit --tag ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.REPOSITORY }}/${{ vars.IMAGE }}:${{ vars.TAG }} --project=${{ vars.PROJECT_ID }} .
+
+      - name: Deploy to Cloud Run
+        run: gcloud run deploy notely --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.REPOSITORY }}/${{ vars.IMAGE }}:${{ vars.TAG }} --region ${{ vars.REGION }} --allow-unauthenticated --project ${{ vars.PROJECT_ID }} --max-instances=4
